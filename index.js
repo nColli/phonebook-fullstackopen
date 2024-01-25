@@ -63,9 +63,9 @@ function isRepeated(posibleId) {
     let repeated = false
 
     let i = 0
-    while (i < persons.length && !isRepeated) {
-        if (person.id === posibleId) {
-            isRepeated = true
+    while (i < persons.length && !repeated) {
+        if (persons[i].id === posibleId) {
+            repeated = true
         }
 
         i++;
@@ -86,12 +86,51 @@ const generateId = () => {
     return posibleId
 }
 
+const isNameRepeated = (name) => {
+    let repeated = false
+
+    let i = 0
+    while (i < persons.length && !repeated) {
+        console.log(persons[i].name, name, persons[i].name === name);
+        if (persons[i].name === name) {
+            repeated = true
+        }
+
+        i++;
+    }
+
+    return repeated
+}
+
 app.post('/api/persons', (request, response) => {
     const body = request.body
     console.log('body',body);
     if(!body) {
         return response.status(400).json({
             error: 'content missing'
+        })
+    }
+    
+    if (!body.name && !body.number) {
+        return response.status(400).json({
+            error: 'name and number missing'
+        })
+    } else {
+        if (!body.name) {
+            return response.status(400).json({
+                error: 'name missing'
+            })
+        } else
+            if (!body.number) {
+                return response.status(400).json({
+                    error: 'number missing'
+                })
+            }
+    }
+    
+    if (isNameRepeated(body.name)) {
+        return response.status(400).json({
+            error: 'name must be unique'
         })
     }
 
