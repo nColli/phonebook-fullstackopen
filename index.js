@@ -53,6 +53,59 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end()
 })
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}  
+
+function isRepeated(posibleId) {
+    let repeated = false
+
+    let i = 0
+    while (i < persons.length && !isRepeated) {
+        if (person.id === posibleId) {
+            isRepeated = true
+        }
+
+        i++;
+    }
+
+    return repeated
+}
+
+const generateId = () => {
+    let posibleId;
+    
+    do {
+        posibleId = getRandomInt(0, 999999);
+        console.log(posibleId);
+        console.log('is repeated',isRepeated(posibleId));
+    } while (isRepeated(posibleId));
+
+    return posibleId
+}
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    console.log('body',body);
+    if(!body) {
+        return response.status(400).json({
+            error: 'content missing'
+        })
+    }
+
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    }
+
+    persons = persons.concat(person)
+
+    console.log(person);
+    response.json(person)
+})
 
 const PORT = 3001
 app.listen(PORT)
