@@ -4,6 +4,10 @@ var morgan = require('morgan')
 
 app.use(express.json())
 
+morgan.token('content', function(req, res) {
+    return JSON.stringify(req.body);
+});
+
 let persons = [
     { 
       "id": 1,
@@ -27,7 +31,7 @@ let persons = [
     }
 ]
 
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'))
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
@@ -82,8 +86,8 @@ const generateId = () => {
     
     do {
         posibleId = getRandomInt(0, 999999);
-        console.log(posibleId);
-        console.log('is repeated',isRepeated(posibleId));
+        //console.log(posibleId);
+        //console.log('is repeated',isRepeated(posibleId));
     } while (isRepeated(posibleId));
 
     return posibleId
@@ -94,7 +98,7 @@ const isNameRepeated = (name) => {
 
     let i = 0
     while (i < persons.length && !repeated) {
-        console.log(persons[i].name, name, persons[i].name === name);
+        //console.log(persons[i].name, name, persons[i].name === name);
         if (persons[i].name === name) {
             repeated = true
         }
@@ -107,7 +111,7 @@ const isNameRepeated = (name) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    console.log('body',body);
+    //console.log('body',body);
     if(!body) {
         return response.status(400).json({
             error: 'content missing'
@@ -145,7 +149,7 @@ app.post('/api/persons', (request, response) => {
 
     persons = persons.concat(person)
 
-    console.log(person);
+    //console.log(person);
     response.json(person)
 })
 
