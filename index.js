@@ -41,7 +41,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :c
 
 app.get('/api/persons', (request, response) => {
   //response.json(persons)
-  Person.fin({}).then(persons => {
+  Person.find({}).then(persons => {
     response.json(persons)
   })
 })
